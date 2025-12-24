@@ -4,24 +4,41 @@ pipeline {
             label 'AGENT-1'
         }
     }
+    environment {
+        COURSE = "Jenkins"
+    }
     stages {
         stage('Build') {
             steps {
-                echo "Building"
+                script{
+                    sh """
+                        echo "Building"
+                        echo $COURSE
+                        env
+                    """
+                }
             }
         }
         stage('Test') {
             steps {
-                echo "Testing"
+                script{
+                    sh """
+                        echo "Test"
+                    """
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying"
+                script{
+                    sh """
+                        echo "Deploy"
+                    """
+                }
             }
         }
     }
-    post {
+    post{
         always{
             echo 'I will always say Hello again!'
             cleanWs()
@@ -30,7 +47,10 @@ pipeline {
             echo 'I will run if success'
         }
         failure {
-            echo 'I will stop if failure'
+            echo 'I will run if failure'
+        }
+        aborted {
+            echo 'pipeline is aborted'
         }
     }
 }
